@@ -1,4 +1,4 @@
-# Programacion Funcional (Java 1.8)
+# Programación Funcional (Java 1.8)
 
 ## Módulo 1: Introducción a la Programación Funcional
 
@@ -208,20 +208,226 @@ Aquí te presento algunos de los tipos de expresiones lambda más comunes en Jav
 La interfaz Consumer es útil en situaciones donde necesitas realizar una acción o una operación en un objeto, pero no necesitas devolver ningún valor. Puede ser utilizado en operaciones como forEach en colecciones, donde se desea aplicar una acción a cada elemento de la colección.
 
 En resumen, Consumer es una interfaz funcional que representa una operación que toma un argumento y no devuelve ningún valor explícito, y se utiliza comúnmente para realizar acciones en objetos en lugar de producir resultados.  
-   
    4. **Ejemplos de uso de expresiones lambda**
+
+**"Los ejemplos estan en el package módulo1, la clase 'EjemploFunctionLamnbda'"**
 
 ## Módulo 3: Streams en Java 8
 ### 3.1. Introducción a los streams
-3.1.1. ¿Qué son los streams?
+**3.1.1. ¿Qué son los streams?**
+
+Los streams en Java 8 son una característica que permite procesar secuencias de elementos de manera eficiente y declarativa. En esencia, un stream es una secuencia de elementos que puede ser procesada en paralelo o en serie de una manera similar a una tubería (pipeline) de datos.
+
+Aquí hay algunas características clave de los streams:
+
+**Secuencia de elementos:** Un stream representa una secuencia de elementos. Estos elementos pueden ser objetos de cualquier tipo, como números, cadenas, objetos personalizados, etc.
+
+**Operaciones de alto nivel:** Los streams proporcionan una serie de operaciones de alto nivel que permiten realizar operaciones de transformación, filtrado, agrupación, ordenación y reducción en la secuencia de elementos. Estas operaciones son declarativas y se aplican a todos los elementos del stream.
+
+**No son estructuras de datos:** Los streams no almacenan datos por sí mismos. En cambio, permiten realizar operaciones en los datos mientras se mantienen almacenados en sus fuentes originales (como listas, arrays o colecciones).
+
+**Lazy evaluation:** Los streams utilizan la evaluación perezosa (lazy evaluation), lo que significa que las operaciones en un stream no se realizan hasta que se necesita un resultado concreto. Esto puede mejorar la eficiencia al evitar el cálculo innecesario.
+
+**Posibilidad de paralelismo:** Los streams ofrecen la posibilidad de realizar operaciones en paralelo en múltiples núcleos de CPU, lo que puede acelerar el procesamiento de grandes conjuntos de datos.
+
+**Pipelines de operaciones:** Puedes construir tuberías (pipelines) de operaciones en un stream, lo que significa que puedes encadenar varias operaciones juntas para realizar un procesamiento más complejo en una sola línea de código.
+
+Para empezar a usar streams en Java 8, primero debes obtener un stream desde una fuente de datos, como una lista o un array, utilizando métodos como stream() o parallelStream(). Luego, puedes encadenar operaciones en ese stream para realizar el procesamiento deseado.
+
+En resumen, los streams en Java 8 son una característica poderosa que permite procesar secuencias de elementos de manera eficiente y declarativa, facilitando la manipulación y transformación de datos de manera más concisa y legible en comparación con enfoques tradicionales.
 3.1.2. Características de los streams
 
 ### 3.2. Operaciones intermedias y terminales
-3.2.1. filter
-3.2.2. map
-3.2.3. flatMap
-3.2.4. reduce
-3.2.5. collect
+En Java 8 Streams, las operaciones se dividen en dos categorías principales: operaciones intermedias y operaciones terminales. Las operaciones intermedias son aquellas que se pueden encadenar en un flujo (stream) y que no producen un resultado final hasta que se encuentre una operación terminal. Una de las operaciones intermedias más comunes es filter.
+
+**3.2.1. filter**
+
+La operación filter se utiliza para filtrar elementos de un flujo (stream) en función de una condición especificada mediante un predicado. El resultado es un nuevo flujo que contiene solo los elementos que cumplen con la condición del predicado.
+
+La firma de la operación filter es la siguiente:
+
+```Stream<T> filter(Predicate<? super T> predicate)```
+
+predicate es un predicado que especifica la condición que debe cumplir un elemento para ser incluido en el nuevo flujo.
+
+Aquí hay un ejemplo de cómo utilizar la operación filter para filtrar números pares de un flujo de enteros:
+
+      import java.util.Arrays;
+      import java.util.List;
+      import java.util.stream.Collectors;
+      
+      public class EjemploFilter {
+      public static void main(String[] args) {
+
+      List<Integer> numeros = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        List<Integer> pares = numeros.stream()
+                .filter(numero -> numero % 2 == 0)
+                .collect(Collectors.toList());
+
+        System.out.println("Números pares: " + pares);
+        }
+      }
+
+En este ejemplo, el método filter se utiliza para crear un nuevo flujo que contiene solo los números pares de la lista original numeros. El predicado numero -> numero % 2 == 0 verifica si un número es par y solo los números que cumplen con esta condición se incluirán en el nuevo flujo.
+
+Finalmente, utilizamos collect para recopilar los elementos filtrados en una lista pares.
+
+La operación filter es útil para reducir el tamaño de un flujo eliminando elementos que no cumplan con una cierta condición, lo que puede ser útil en diversas situaciones de procesamiento de datos.
+
+**3.2.2. map**
+
+La operación map es otra de las operaciones intermedias en Java 8 Streams. Se utiliza para transformar cada elemento de un flujo (stream) en otro elemento mediante la aplicación de una función dada. El resultado es un nuevo flujo que contiene los elementos transformados.
+
+La firma de la operación map es la siguiente:
+
+```<R> Stream<R> map(Function<? super T, ? extends R> mapper)```
+
+mapper es una función que toma un elemento de tipo T del flujo original y devuelve un nuevo elemento de tipo R que representa la transformación deseada.
+
+Aquí tienes un ejemplo de cómo usar la operación map para transformar una lista de cadenas en una lista de sus longitudes (número de caracteres):
+
+      import java.util.Arrays;
+      import java.util.List;
+      import java.util.stream.Collectors;
+      
+      public class EjemploMap {
+      public static void main(String[] args) {
+      List<String> cadenas = Arrays.asList("Manzana", "Banana", "Cereza", "Damasco");
+      
+              List<Integer> longitudes = cadenas.stream()
+                      .map(cadena -> cadena.length())
+                      .collect(Collectors.toList());
+      
+              System.out.println("Longitudes de las cadenas: " + longitudes);
+          }
+      }
+
+En este ejemplo, la operación map se utiliza para crear un nuevo flujo que contiene las longitudes de las cadenas en la lista original cadenas. La función cadena -> cadena.length() toma cada cadena y devuelve su longitud, lo que resulta en un flujo de longitudes. Luego, utilizamos collect para recopilar estas longitudes en una lista longitudes.
+
+La operación map es útil cuando necesitas transformar elementos de un flujo en otro tipo de elemento o realizar algún tipo de procesamiento en cada elemento del flujo. Puedes usarla para mapear elementos de una forma a otra de manera eficiente y concisa.
+
+**3.2.3. flatMap**
+
+La operación flatMap es una operación intermedia en Java 8 Streams que se utiliza para transformar y aplanar un flujo (stream) de elementos en otro flujo. A menudo se utiliza cuando tienes una estructura de datos anidada o una colección de colecciones y deseas convertirla en un solo flujo de elementos. La operación flatMap aplica una función que devuelve un flujo (stream) para cada elemento del flujo original y luego aplanará estos flujos en un único flujo resultante.
+
+La firma de la operación flatMap es la siguiente:
+
+```<R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper)```
+
+mapper es una función que toma un elemento de tipo T del flujo original y devuelve un nuevo flujo de elementos de tipo R. Este flujo se aplanará en el flujo resultante.
+La principal diferencia entre map y flatMap radica en cómo manejan la estructura del flujo devuelto por la función mapper:
+
+map aplica la función y envuelve el resultado en un nuevo flujo, lo que da como resultado un flujo de flujos.
+flatMap aplica la función y luego aplanará los flujos resultantes en un único flujo.
+Aquí tienes un ejemplo de cómo usar la operación flatMap para aplanar una lista de listas de números en un solo flujo de números:
+
+            import java.util.Arrays;
+            import java.util.List;
+            import java.util.stream.Collectors;
+            
+            public class EjemploFlatMap {
+            public static void main(String[] args) {
+            List<List<Integer>> listas = Arrays.asList(
+            Arrays.asList(1, 2, 3),
+            Arrays.asList(4, 5, 6),
+            Arrays.asList(7, 8, 9)
+            );
+      
+              List<Integer> numeros = listas.stream()
+                      .flatMap(lista -> lista.stream())
+                      .collect(Collectors.toList());
+      
+              System.out.println("Números aplanados: " + numeros);
+                  }
+            }
+
+En este ejemplo, listas es una lista de listas de números. Utilizamos flatMap para aplanar estas listas en un solo flujo de números. La función lista -> lista.stream() toma cada lista interna y la convierte en un flujo, y luego flatMap combina estos flujos en uno solo. Finalmente, utilizamos collect para recopilar los números en una lista numeros.
+
+La operación flatMap es útil cuando trabajas con estructuras de datos anidadas o cuando necesitas combinar múltiples flujos en uno solo, como en el caso de listas de listas o colecciones de colecciones.
+
+
+**3.2.4. reduce**
+
+
+La operación reduce es una operación terminal en Java 8 Streams que se utiliza para **combinar los elementos de un flujo** (stream) en **un solo resultado**, aplicando una función de reducción. Esta operación es extremadamente versátil y se puede usar para realizar una variedad de tareas de agregación, como suma, multiplicación, concatenación de cadenas, encontrar el valor máximo o mínimo, entre otros.
+
+La firma de la operación reduce es la siguiente:
+
+```Optional<T> reduce(BinaryOperator<T> accumulator)```
+
+accumulator es una función binaria que toma dos elementos de tipo T y devuelve un nuevo elemento de tipo T. Esta función se utiliza para combinar los elementos del flujo uno por uno.
+reduce devuelve un Optional que contiene el resultado de la operación de reducción. El Optional es necesario porque el flujo podría estar vacío, y en ese caso, no habría ningún valor para reducir.
+
+Aquí hay un ejemplo de cómo usar la operación reduce para calcular la suma de una lista de números:
+
+            import java.util.Arrays;
+            import java.util.List;
+            import java.util.Optional;
+            
+            public class EjemploReduce {
+                  public static void main(String[] args) {
+                    List<Integer> numeros = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+            
+                    Optional<Integer> suma = numeros.stream()
+                            .reduce((x, y) -> x + y);
+            
+                    if (suma.isPresent()) {
+                        System.out.println("Suma de los números: " + suma.get());
+                    } else {
+                        System.out.println("El flujo estaba vacío.");
+                    }
+                  }
+            }
+
+En este ejemplo, utilizamos reduce para calcular la suma de los números en la lista numeros. La función (a, b) -> a + b toma dos números y devuelve su suma. reduce combina los elementos del flujo uno por uno utilizando esta función y devuelve un Optional que contiene el resultado de la suma.
+
+Es importante mencionar que también puedes proporcionar un valor inicial (identidad) como argumento adicional a reduce si deseas un valor predeterminado en caso de que el flujo esté vacío. Por ejemplo:
+
+            Optional<Integer> suma = numeros.stream()
+                    .reduce(0, (x, y) -> x + y);
+
+En este caso, el valor inicial es 0, por lo que si el flujo está vacío, el resultado de la suma será 0.
+
+La operación reduce es fundamental para realizar operaciones de agregación en flujos de elementos y es muy útil en una variedad de situaciones de procesamiento de datos.
+
+**3.2.5. collect**
+
+La operación collect es una **"operación terminal"** en Java 8 Streams que se utiliza para acumular o recopilar elementos de un flujo (stream) en una colección o en otro tipo de estructura de datos mutable. Esta operación es particularmente útil cuando deseas tomar los elementos de un flujo y reunirlos en una lista, conjunto, mapa u otra estructura de datos para su posterior procesamiento o análisis.
+
+La firma de la operación collect es la siguiente:
+
+      <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner)
+
+supplier es una función que proporciona una nueva instancia de la colección o estructura de datos en la que se recopilarán los elementos del flujo.
+
+accumulator es una función que combina un elemento del flujo con la estructura de datos acumulativa. Toma dos argumentos: la estructura acumulativa y el elemento del flujo, y agrega el elemento a la estructura.
+
+combiner es una función que combina dos estructuras de datos acumulativas en una sola. Esto es relevante cuando se realiza una operación de reducción en paralelo.
+
+Aquí hay un ejemplo de cómo usar la operación collect para recopilar elementos de un flujo en una lista:
+
+            import java.util.Arrays;
+            import java.util.List;
+            import java.util.stream.Collectors;
+            
+            public class EjemploCollect {
+            public static void main(String[] args) {
+            List<Integer> numeros = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+            
+            List<Integer> numerosPares = numeros.stream()
+                    .filter(numero -> numero % 2 == 0)
+                    .collect(Collectors.toList());
+            
+            System.out.println("Números pares: " + numerosPares);
+            }
+            }
+
+En este ejemplo, utilizamos collect para recopilar las cadenas del flujo frutas en una lista. La operación Collectors.toList() proporciona una instancia de ArrayList que recopila los elementos en una lista.
+
+Además de Collectors.toList(), Java 8 proporciona métodos en la clase Collectors para recopilar elementos en otras estructuras de datos, como conjuntos, mapas, etc. Puedes personalizar la operación de recopilación según tus necesidades utilizando collect.
+
+La operación collect es muy versátil y te permite reunir elementos de un flujo en la estructura de datos que mejor se adapte a tu situación particular. Es ampliamente utilizada en el procesamiento de flujos para acumular resultados o transformar los datos en una forma más útil para su posterior procesamiento.
 
 ### 3.3. Ejemplos de uso de streams
 
