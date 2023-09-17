@@ -235,7 +235,30 @@ Aquí hay algunas características clave de los streams:
 Para empezar a usar streams en Java 8, primero debes obtener un stream desde una fuente de datos, como una lista o un array, utilizando métodos como stream() o parallelStream(). Luego, puedes encadenar operaciones en ese stream para realizar el procesamiento deseado.
 
 En resumen, los streams en Java 8 son una característica poderosa que permite procesar secuencias de elementos de manera eficiente y declarativa, facilitando la manipulación y transformación de datos de manera más concisa y legible en comparación con enfoques tradicionales.
-3.1.2. Características de los streams
+
+**3.1.2. Características de los streams**
+
+Las características de los streams en Java se refieren a las propiedades y capacidades que proporciona esta API para el procesamiento de secuencias de datos de manera más eficiente y expresiva. A continuación, se presentan algunas de las características clave de los streams en Java:
+
+**Secuencia de datos:** Los streams representan una secuencia de datos que pueden ser elementos individuales o elementos de una colección, como una lista o un conjunto. Los streams permiten procesar estos datos de manera uniforme y declarativa.
+
+**Operaciones intermedias:** Los streams admiten operaciones intermedias, como filter, map, flatMap, distinct, sorted y peek, que se pueden encadenar para transformar, filtrar o manipular los datos en la secuencia. Estas operaciones no producen un resultado final de inmediato, sino que generan un nuevo stream.
+
+**Operaciones terminales:** Las operaciones terminales, como forEach, collect, reduce, min, max y count, se utilizan para obtener un resultado final o llevar a cabo una acción en el stream. Después de una operación terminal, el stream se cierra y no se puede utilizar nuevamente.
+
+**Procesamiento paralelo:** Los streams permiten el procesamiento paralelo de datos mediante el uso de múltiples hilos, lo que puede mejorar significativamente el rendimiento en sistemas multicore. Para activar el procesamiento paralelo, se pueden usar las operaciones parallel() o parallelStream().
+
+**Lazy Evaluation (Evaluación perezosa):** Los streams utilizan una evaluación perezosa, lo que significa que las operaciones no se ejecutan hasta que se invoque una operación terminal. Esto permite que Java optimice el procesamiento y evite realizar cálculos innecesarios.
+
+**Pipelines de operaciones:** Puedes construir pipelines de operaciones encadenando múltiples operaciones intermedias y terminales en un solo flujo de código, lo que facilita la escritura de código limpio y expresivo.
+
+**Compatibilidad con tipos primitivos:** Los streams en Java ofrecen versiones especializadas para tipos primitivos (por ejemplo, IntStream, LongStream, DoubleStream), lo que reduce la sobrecarga de almacenamiento y mejora el rendimiento al trabajar con datos primitivos.
+
+**Manipulación de colecciones:** Los streams pueden operar en colecciones y estructuras de datos, lo que facilita el procesamiento de datos en listas, conjuntos, mapas y otras estructuras.
+
+**Compatibilidad con API funcional:** Los streams son compatibles con expresiones lambda, lo que permite escribir código más conciso y funcional para el procesamiento de datos.
+
+En conjunto, estas características hacen que los streams en Java sean una herramienta poderosa y versátil para el procesamiento de datos, lo que facilita la escritura de código más claro y eficiente en comparación con enfoques tradicionales basados en bucles.
 
 ### 3.2. Operaciones intermedias y terminales
 En Java 8 Streams, las operaciones se dividen en dos categorías principales: operaciones intermedias y operaciones terminales. Las operaciones intermedias son aquellas que se pueden encadenar en un flujo (stream) y que no producen un resultado final hasta que se encuentre una operación terminal. Una de las operaciones intermedias más comunes es filter.
@@ -350,7 +373,7 @@ La operación flatMap es útil cuando trabajas con estructuras de datos anidadas
 **3.2.4. reduce**
 
 
-La operación reduce es una operación terminal en Java 8 Streams que se utiliza para **combinar los elementos de un flujo** (stream) en **un solo resultado**, aplicando una función de reducción. Esta operación es extremadamente versátil y se puede usar para realizar una variedad de tareas de agregación, como suma, multiplicación, concatenación de cadenas, encontrar el valor máximo o mínimo, entre otros.
+La operación reduce es una **operación terminal** en Java 8 Streams que se utiliza para **combinar los elementos de un flujo** (stream) en **un solo resultado**, aplicando una función de reducción. Esta operación es extremadamente versátil y se puede usar para realizar una variedad de tareas de agregación, como suma, multiplicación, concatenación de cadenas, encontrar el valor máximo o mínimo, entre otros.
 
 La firma de la operación reduce es la siguiente:
 
@@ -432,40 +455,277 @@ La operación collect es muy versátil y te permite reunir elementos de un flujo
 ### 3.3. Ejemplos de uso de streams
 
 ## Módulo 4: Programación Funcional Avanzada en Java 8
-4.1. Referencias a métodos y construcción de streams
-4.1.1. :: operator
-4.1.2. Stream.builder()
+**4.1. Referencias a métodos y construcción de streams**
 
-4.2. Optional en Java 8
-4.2.1. ¿Qué es Optional?
-4.2.2. Evitando excepciones NullPointerException
+**- Referencias a métodos**
 
-4.3. Composición de funciones
-4.3.1. compose y andThen
+  En Java 8, las referencias a métodos son una característica que te permite referenciar métodos existentes o constructores de manera más concisa. Son especialmente útiles cuando trabajas con expresiones lambda que simplemente llaman a un método existente. Hay cuatro tipos de referencias a métodos:
+
+**Referencia a un método estático:** Permite referenciar un método estático existente.
+
+      // Sintaxis: Clase::métodoEstático
+      Function<String, Integer> referencia = Integer::parseInt;
+
+**Referencia a un método de instancia de un objeto en particular:** Permite referenciar un método de instancia de un objeto específico.
+
+        // Sintaxis: objeto::métodoDeInstancia
+        String nombre = "John Doe";
+        Consumer<String> referencia = nombre::startsWith;
+
+**Referencia a un método de instancia de un objeto arbitrario de un tipo particular:** Permite referenciar un método de instancia de un objeto arbitrario de un tipo específico.
+
+        // Sintaxis: Tipo::métodoDeInstancia
+        List<String> nombres = Arrays.asList("John", "Jane", "Mary");
+        Collections.sort(nombres, String::compareToIgnoreCase);
+
+**Referencia a un constructor:** Permite referenciar un constructor existente.
+    
+            // Sintaxis: Tipo::new
+            Supplier<List<String>> referencia = ArrayList::new;
+
+**- Construcción de streams**
+
+En este módulo, también aprenderás a construir streams en Java 8. Los streams se pueden crear desde una variedad de fuentes de datos, incluyendo colecciones, arrays y generadores infinitos. Algunas de las formas comunes de construir streams son:
+
+**Usar el método stream() en colecciones:** Puedes obtener un stream de una colección llamando al método stream() en dicha colección.
+
+        List<String> nombres = Arrays.asList("John", "Jane", "Mary");
+        Stream<String> flujo = nombres.stream();
+
+**Usar el método stream() en arrays:** También puedes obtener un stream de un array utilizando el método stream().
+
+            String[] nombres = {"John", "Jane", "Mary"};
+            Stream<String> flujo = Arrays.stream(nombres);
+
+**Usar el método Stream.of():** Puedes crear un stream a partir de elementos individuales o arrays utilizando el método Stream.of().
+
+                Stream<String> flujo = Stream.of("John", "Jane", "Mary");
+                Stream<Integer> flujo = Stream.of(1, 2, 3, 4, 5);
+                Stream<String> flujo = Stream.of(nombres);
+
+**Generar un stream infinito:** Puedes generar un stream infinito utilizando el método Stream.generate() y proporcionando un Supplier que genere elementos.
+
+            Stream<String> flujoInfinito = Stream.generate(() -> "John");
+
+**Generar un stream con elementos secuenciales:** Puedes generar un stream con elementos secuenciales utilizando el método Stream.iterate() y proporcionando un valor inicial y una función de iteración.
+
+            Stream<Integer> flujoSecuencial = Stream.iterate(1, n -> n + 1);
+
+**Usar el método parallelStream() en colecciones:** Puedes obtener un stream paralelo de una colección llamando al método parallelStream() en dicha colección.
+
+        List<String> nombres = Arrays.asList("John", "Jane", "Mary");
+        Stream<String> flujoParalelo = nombres.parallelStream();
+
+**4.1.1. :: operator**
+
+El operador :: en Java se utiliza para crear referencias a métodos o constructores. Es una característica introducida en Java 8 que simplifica la llamada a métodos existentes o la referencia a constructores en expresiones lambda o en otras situaciones donde necesitas una instancia de una interfaz funcional.
+
+
+**4.1.2. Stream.builder()**
+
+Stream.builder() es una forma de construir un Stream de manera más controlada y dinámica, especialmente cuando no tienes todos los elementos disponibles de antemano y deseas agregar elementos al stream a medida que avanzas en tu código.
+
+Para utilizar Stream.builder(), sigues estos pasos:
+
+Creas un objeto Stream.Builder<T> utilizando el método estático Stream.builder().
+
+Agregas elementos al builder utilizando el método add(T t).
+
+Cuando hayas agregado todos los elementos necesarios, construyes el Stream llamando al método build() en el builder.
+
+Aquí tienes un ejemplo de cómo usar Stream.builder() para construir un Stream de cadenas dinámicamente:
+
+      Stream.Builder<String> builder = Stream.builder();
+      builder.add("Manzana");
+      builder.add("Banana");
+      builder.add("Cereza");
+      
+      // Agregar más elementos si es necesario
+      
+      Stream<String> stream = builder.build();
+
+En este ejemplo, creamos un Stream.Builder<String> utilizando Stream.builder(). Luego, agregamos tres cadenas al builder utilizando el método add(). Finalmente, construimos el Stream llamando al método build() en el builder.
+
+Stream.builder() te brinda un mayor control sobre la construcción de un Stream y te permite adaptarte a situaciones donde los elementos no están disponibles de inmediato en una colección o fuente de datos.
+
+
+**4.2. Optional en Java 8**
+**4.2.1. ¿Qué es Optional?**
+
+Optional es una clase introducida en Java 8 para abordar el problema de las excepciones NullPointerException al trabajar con valores que pueden ser nulos. Representa un envoltorio (wrapper) para un valor que puede ser nulo o no nulo. La idea detrás de Optional es proporcionar una forma más segura y declarativa de manejar los valores nulos, evitando así las excepciones NullPointerException que pueden causar errores en tiempo de ejecución.
+
+Algunos conceptos clave relacionados con Optional:
+
+Presente (Present) y Ausente (Empty): Un objeto Optional puede estar presente, lo que significa que contiene un valor no nulo, o puede estar ausente, lo que significa que no contiene ningún valor.
+
+Operaciones seguras: Optional proporciona una serie de operaciones seguras para trabajar con sus valores, como get(), isPresent(), ifPresent(), orElse(), orElseGet(), orElseThrow(), entre otras.
+
+Evita NullPointerException: Al utilizar Optional de manera adecuada, puedes escribir código que maneje de manera elegante la posibilidad de valores nulos sin necesidad de comprobaciones explícitas de nulidad.
+
+Promueve la programación defensiva: Optional fomenta la programación defensiva al hacer que los desarrolladores piensen en cómo manejar valores nulos de manera explícita.
+
+Un ejemplo básico de cómo utilizar Optional es el siguiente:
+
+        Optional<String> nombre = Optional.of("John Doe");
+        System.out.println(nombre.get());
+
+En este ejemplo, creamos un Optional que contiene el valor "John Doe" utilizando el método estático of(). Luego, utilizamos el método get() para obtener el valor del Optional. Si el Optional está presente, get() devolverá el valor, de lo contrario, lanzará una excepción NoSuchElementException.
+
+        Optional<String> optionalNombre = Optional.ofNullable(obtenerNombre()); // Obtener un Optional con un valor posiblemente nulo
+        String nombre = optionalNombre.orElse("Nombre Predeterminado"); // Obtener el valor o un valor predeterminado si está ausente
+
+En este ejemplo, optionalNombre contiene un valor opcional que puede ser nulo. Usamos orElse para obtener el valor contenido en el Optional o un valor predeterminado si está ausente.
+
+**4.2.2. Evitando excepciones NullPointerException**
+
+Uno de los beneficios clave de Optional es evitar las excepciones NullPointerException. Cuando utilizas métodos como get() en un Optional que contiene un valor nulo, no lanzará una excepción, sino que simplemente devolverá un valor nulo o el valor predeterminado especificado.
+
+Además, puedes utilizar métodos como ifPresent() para ejecutar código solo si el valor está presente, lo que evita la necesidad de comprobaciones explícitas de nulidad.
+
+      Optional<String> optionalNombre = Optional.ofNullable(obtenerNombre());
+      
+      optionalNombre.ifPresent(nombre -> {
+      System.out.println("El nombre es: " + nombre);
+      });
+
+En este ejemplo, el código dentro de ifPresent se ejecutará solo si optionalNombre contiene un valor no nulo, lo que elimina la necesidad de verificar si el valor es nulo antes de realizar una acción.
+
+En resumen, Optional es una herramienta útil para manejar de manera más segura y declarativa los valores que pueden ser nulos en Java. Ayuda a evitar excepciones NullPointerException y promueve una programación más robusta y defensiva.
+
+**4.3. Composición de funciones**
+
+La composición de funciones es una técnica en programación funcional que te permite combinar dos o más funciones para crear una nueva función. En Java 8, puedes realizar la composición de funciones utilizando los métodos compose y andThen proporcionados por la interfaz funcional Function<T, R>.
+
+**4.3.1. compose y andThen**
+
+**compose:** El método compose se utiliza para componer dos funciones, donde la primera función se ejecuta y luego la segunda función se aplica al resultado de la primera. En otras palabras, si tienes dos funciones f y g, f.compose(g) ejecutará primero g y luego f en el resultado de g.
+
+**andThen:** El método andThen es similar a compose, pero realiza las operaciones en el orden inverso. Es decir, si tienes dos funciones f y g, f.andThen(g) ejecutará primero f y luego g en el resultado de f.
+
+Estos métodos permiten construir flujos de transformación de datos de manera más elegante y legible, ya que puedes encadenar funciones y aplicar transformaciones secuenciales.
+
+Ejemplo de compose y andThen:
+
+Supongamos que tienes dos funciones f y g que realizan operaciones en números enteros:
+
+      Function<Integer, Integer> f = x -> x * 2;
+      Function<Integer, Integer> g = x -> x + 3;
+
+Puedes componer estas funciones de la siguiente manera:
+
+Usando compose para ejecutar primero g y luego f:
+
+      Function<Integer, Integer> compuesta = f.compose(g);
+      int resultado1 = compuesta.apply(5); // Aplicará primero g y luego f: f(g(5)) = f(5+3) = f(8) = 8*2 = 16
+
+Usando andThen para ejecutar primero f y luego g:
+
+      Function<Integer, Integer> compuesta2 = f.andThen(g);
+      int resultado2 = compuesta2.apply(5); // Aplicará primero f y luego g: g(f(5)) = g(5*2) = g(10) = 10+3 = 13
+
+En ambos casos, obtienes un nuevo Function que realiza la composición de las funciones f y g, aplicando las transformaciones en el orden especificado.
+
+La composición de funciones es una técnica poderosa para construir flujos de transformación de datos y modularizar el código de manera más eficiente y legible en programación funcional.
 
 ## Módulo 5: Programación Funcional en Práctica
-5.1. Patrones comunes en programación funcional
-5.1.1. Recursión
-5.1.2. Map-Reduce
+**5.1. Patrones comunes en programación funcional**
+**5.1.1. Recursión**
 
-5.2. Manejo de excepciones en programación funcional
-5.2.1. Manejo de excepciones con try-catch
-5.2.2. Either y manejo de errores
+La recursión es un patrón de programación en el que una función se llama a sí misma para resolver un problema más grande o complejo dividiéndolo en subproblemas más pequeños y manejables. La recursión es una característica esencial en la programación funcional y se utiliza en lugar de bucles iterativos en muchos casos.
+
+Los conceptos clave de la recursión incluyen:
+
+**Caso base:** Es el punto de terminación de la recursión. Cuando se alcanza el caso base, la función recursiva deja de llamarse a sí misma y comienza a volver atrás para resolver los problemas más grandes.
+
+**Caso recursivo:** Es la parte de la función que se llama a sí misma con argumentos modificados. Esto permite resolver el problema original dividiéndolo en subproblemas más pequeños.
+
+Un ejemplo de una función recursiva en programación funcional que calcula el factorial de un número en Java 8:
+
+      import java.util.function.Function;
+
+      public class EjemploRecursion {
+      public static void main(String[] args) {
+      // Definimos una función recursiva para calcular el factorial
+      Function<Integer, Integer> factorial = n -> {
+      // Caso base: si n es 0 o 1, el factorial es 1
+      if (n == 0 || n == 1) {
+      return 1;
+      }
+      // Caso recursivo: calculamos el factorial de n-1 y lo multiplicamos por n
+      else {
+      return n * factorial.apply(n - 1);
+      }
+      };
+
+      // Calculamos el factorial de 5
+      int resultado = factorial.apply(5);
+      System.out.println("El factorial de 5 es: " + resultado);
+      }
+    }
+
+En este ejemplo, definimos una función factorial que toma un número n como argumento. Dentro de la función, tenemos dos casos:
+
+Caso base: Si n es igual a 0 o 1, el resultado del factorial es 1, por lo que simplemente retornamos 1.
+
+Caso recursivo: Si n es mayor que 1, calculamos el factorial de n-1 llamando a la función factorial de manera recursiva y luego multiplicamos el resultado por n.
+
+Finalmente, calculamos el factorial de 5 llamando a factorial.apply(5) y mostramos el resultado en la consola. La recursión se utiliza aquí para dividir el problema del cálculo del factorial en subproblemas más pequeños hasta llegar al caso base. Este es un ejemplo típico de cómo se implementa la recursión en programación funcional.
+
+**5.1.2. Map-Reduce**
+
+Map-Reduce es un patrón de programación funcional que se utiliza para procesar y analizar grandes conjuntos de datos distribuidos de manera eficiente. Este patrón se ha vuelto especialmente popular en el contexto de la programación en paralelo y en la construcción de sistemas de procesamiento de datos distribuidos, como Hadoop y Apache Spark.
+
+El patrón Map-Reduce se divide en dos fases principales: la fase de Map y la fase de Reduce.
+
+Fase de Map (Mapeo): En esta fase, se aplica una función llamada función de mapeo (map function) a cada elemento del conjunto de datos original. La función de mapeo toma un elemento de entrada y produce una serie de pares clave-valor (key-value). Estos pares representan la información relevante que se extrae o se procesa del elemento de entrada. La función de mapeo se aplica de manera paralela a múltiples elementos del conjunto de datos original.
+
+Fase de Reduce (Reducción): En esta fase, se aplica una función de reducción (reduce function) a los pares clave-valor generados en la fase de Map. La función de reducción agrupa los pares clave-valor por clave y luego realiza una operación de resumen o agregación en cada grupo de pares con la misma clave. El resultado final es un conjunto de resultados resumidos o agregados.
+
+El patrón Map-Reduce es especialmente útil para procesar datos de manera distribuida en clústeres de servidores. Permite el procesamiento paralelo de grandes volúmenes de datos, lo que lo hace adecuado para tareas como el procesamiento de registros de registros, análisis de datos masivos y generación de informes.
+
+Ejemplo simplificado de Map-Reduce en Java 8:
+
+Supongamos que tenemos una lista de números y queremos calcular la suma de todos los números pares utilizando el patrón Map-Reduce.
+
+      import java.util.Arrays;
+      import java.util.List;
+      
+      public class MapReduceExample {
+      public static void main(String[] args) {
+      List<Integer> numeros = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        // Fase de Map: Mapeo para filtrar números pares y asignarles valor 1
+        long sumaPares = numeros.stream()
+                .filter(numero -> numero % 2 == 0)
+                .mapToLong(numero -> 1)
+                .sum();
+
+        // Fase de Reduce: Sumar los valores 1 para obtener la suma total de pares
+        System.out.println("La suma de los números pares es: " + sumaPares);
+        }
+      }
+
+En este ejemplo simplificado, la fase de Map filtra los números pares y asigna el valor 1 a cada uno. Luego, en la fase de Reduce, sumamos todos los valores 1 para obtener la suma total de números pares. Aunque este ejemplo es simple, ilustra el concepto básico de Map-Reduce en programación funcional.
+
+
+**5.2. Manejo de excepciones en programación funcional**
+**5.2.1. Manejo de excepciones con try-catch**
+**5.2.2. Either y manejo de errores**
 
 ## Módulo 6: Biblioteca de Streams Avanzada
-6.1. Streams paralelos
-6.1.1. Paralelismo en streams
-6.1.2. Uso de parallelStream()
+**6.1. Streams paralelos**
+**6.1.1. Paralelismo en streams**
+**6.1.2. Uso de parallelStream()**
 
-6.2. Collectors personalizados
-6.2.1. Creación de collectors personalizados
-6.2.2. toMap, toSet, y otros collectors predefinidos
+**6.2. Collectors personalizados**
+**6.2.1. Creación de collectors personalizados**
+**6.2.2. toMap, toSet, y otros collectors predefinidos**
 
 ## Módulo 7: Diseño Funcional y Pruebas Unitarias
-7.1. Diseño de software funcional
-7.1.1. Principios SOLID en programación funcional
-7.1.2. Inyección de dependencias
+**7.1. Diseño de software funcional**
+**7.1.1. Principios SOLID en programación funcional**
+**7.1.2. Inyección de dependencias**
 
-7.2. Pruebas unitarias en programación funcional
-7.2.1. JUnit y pruebas unitarias
-7.2.2. Pruebas de funciones puras
+**7.2. Pruebas unitarias en programación funcional**
+**7.2.1. JUnit y pruebas unitarias**
+**7.2.2. Pruebas de funciones puras**
