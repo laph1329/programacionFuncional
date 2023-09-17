@@ -1,4 +1,4 @@
-# Programación Funcional (Java 1.8)
+# Programación Funcional (Java 1.8) con ChatGPT
 
 ## Módulo 1: Introducción a la Programación Funcional
 
@@ -984,4 +984,91 @@ En resumen, la inyección de dependencias es una práctica relevante en la progr
 
 **7.2. Pruebas unitarias en programación funcional**
 **7.2.1. JUnit y pruebas unitarias**
+
+JUnit: JUnit es un popular framework de pruebas unitarias para Java (y otros lenguajes) que permite a los desarrolladores escribir y ejecutar pruebas automatizadas en sus aplicaciones Java. Es una herramienta esencial para el desarrollo de software de calidad y la verificación de que las partes individuales de un programa funcionen según lo previsto.
+
+Pruebas Unitarias: Las pruebas unitarias son una técnica de desarrollo de software en la que se prueban unidades de código individuales, como funciones o métodos, para asegurarse de que funcionen correctamente. El objetivo es identificar y corregir errores en unidades específicas del código antes de que se integren en el sistema en su conjunto. Esto mejora la calidad del software y facilita el mantenimiento y la depuración.
+
+En el contexto de la programación funcional, las pruebas unitarias son igualmente importantes. Puedes aplicar las mismas técnicas de pruebas unitarias a tus funciones y expresiones lambda como lo harías con otros métodos y funciones en Java. Aquí hay un ejemplo de cómo se vería una prueba unitaria en JUnit para una función lambda:
+
+      import static org.junit.jupiter.api.Assertions.assertEquals;
+      import org.junit.jupiter.api.Test;
+      import java.util.function.Function;
+      
+      public class PruebaFuncionLambda {
+
+          @Test
+          public void testFuncionLambda() {
+              // Define la función lambda a probar
+              Function<Integer, Integer> funcion = x -> x * 2;
+      
+              // Prueba la función con un valor de entrada
+              int resultado = funcion.apply(5);
+      
+              // Comprueba si el resultado es el esperado
+              assertEquals(10, resultado);
+          }
+      }
+
+En este ejemplo, hemos definido una prueba unitaria utilizando JUnit para una función lambda que multiplica un número por 2. La anotación @Test indica que este método es una prueba. Dentro de la prueba, definimos la función lambda, aplicamos un valor de entrada y luego comparamos el resultado con el valor esperado utilizando assertEquals de JUnit.
+
+Las pruebas unitarias en programación funcional son especialmente útiles para asegurarse de que las funciones y expresiones lambda se comporten de la manera esperada y cumplan con sus especificaciones. También pueden ayudar a identificar problemas en el código antes de que se propaguen a otras partes de la aplicación.
+
 **7.2.2. Pruebas de funciones puras**
+
+Las "pruebas de funciones puras" se refieren a las pruebas unitarias específicas diseñadas para validar el comportamiento de funciones que siguen el principio de "funciones puras" en el contexto de la programación funcional. Las funciones puras son funciones que, dado el mismo conjunto de entradas, siempre producirán el mismo resultado y no tienen efectos secundarios. Estas funciones son predecibles y no dependen de ningún estado mutable externo.
+
+Cuando se realizan pruebas de funciones puras, el objetivo principal es verificar si la función produce el resultado correcto para un conjunto dado de entradas y si no tiene efectos secundarios indeseados. Aquí hay algunas pautas y conceptos clave relacionados con las pruebas de funciones puras:
+
+Determinismo: Las pruebas de funciones puras se basan en la propiedad del determinismo de las funciones puras. Dado un conjunto particular de entradas, la función pura siempre producirá el mismo resultado. Por lo tanto, puedes escribir pruebas que verifiquen si la función produce el resultado esperado para diferentes conjuntos de entradas.
+
+Independencia de estado: Las funciones puras no dependen de ningún estado mutable externo o datos globales. Esto significa que no debes preocuparte por el estado compartido o la mutabilidad al escribir pruebas para funciones puras. Las pruebas deben enfocarse únicamente en las entradas y salidas de la función.
+
+Efectos secundarios: Parte de la prueba de una función pura implica asegurarse de que la función no tenga efectos secundarios. No debe modificar variables globales, archivos o realizar acciones que no sean directamente relevantes para la computación de su resultado.
+
+Propiedades matemáticas: Las funciones puras suelen tener propiedades matemáticas bien definidas. Puedes utilizar estas propiedades para diseñar pruebas que verifiquen si la función se comporta de acuerdo con esas propiedades.
+
+Mocking y stubbing: En algunas situaciones, es posible que necesites simular el comportamiento de funciones o componentes externos que interactúan con la función pura. Esto se hace utilizando técnicas de mocking y stubbing para aislar la función bajo prueba.
+
+Pruebas parametrizadas: Las pruebas parametrizadas son útiles para probar una función pura con diferentes conjuntos de datos de entrada. Puedes definir múltiples casos de prueba y ejecutarlos en una sola prueba parametrizada para verificar la funcionalidad de la función pura.
+
+Pruebas de borde: Asegúrate de incluir casos de prueba que representen situaciones límite o bordes. Estos casos pueden ayudarte a descubrir problemas de esquina en la implementación de la función pura.
+
+En resumen, las pruebas de funciones puras son una parte esencial del desarrollo en programación funcional. Ayudan a garantizar la confiabilidad y previsibilidad de las funciones puras al verificar que producen resultados correctos y no tienen efectos secundarios no deseados. Estas pruebas son fundamentales para la construcción de sistemas robustos y mantenibles en un estilo de programación funcional.
+
+un ejemplo sencillo de una función pura y cómo podrías realizar pruebas unitarias para ella utilizando JUnit:
+
+Supongamos que tenemos una función pura llamada duplicar que toma un número entero y devuelve el doble de ese número. La función es pura porque dado el mismo número de entrada, siempre produce el mismo resultado y no tiene efectos secundarios.
+
+      import org.junit.jupiter.api.Test;
+      import static org.junit.jupiter.api.Assertions.assertEquals;
+      
+      public class PruebaFuncionPura {
+      
+          // La función pura a probar
+          public int duplicar(int numero) {
+              return numero * 2;
+          }
+      
+          @Test
+          public void testDuplicar() {
+              // Creamos una instancia de la clase que contiene la función
+              PruebaFuncionPura instancia = new PruebaFuncionPura();
+      
+              // Probamos la función con diferentes entradas
+              int resultado1 = instancia.duplicar(5);
+              int resultado2 = instancia.duplicar(-3);
+              int resultado3 = instancia.duplicar(0);
+      
+              // Comparamos los resultados con los valores esperados
+              assertEquals(10, resultado1);
+              assertEquals(-6, resultado2);
+              assertEquals(0, resultado3);
+          }
+      }
+
+En este ejemplo, hemos definido una función duplicar que es pura porque no depende de ningún estado externo y siempre produce el doble del número de entrada. Luego, hemos escrito una prueba unitaria utilizando JUnit para verificar que la función duplicar produce los resultados esperados para diferentes entradas.
+
+La anotación @Test marca el método testDuplicar como una prueba unitaria. En esta prueba, creamos una instancia de la clase que contiene la función duplicar y luego llamamos a la función con diferentes valores de entrada. Utilizamos assertEquals para comparar los resultados con los valores esperados y verificar que la función se comporte correctamente.
+
+Este es un ejemplo muy básico, pero ilustra cómo puedes escribir pruebas unitarias para funciones puras en Java utilizando JUnit. En la práctica, las pruebas de funciones puras pueden involucrar casos de prueba más complejos y propiedades matemáticas específicas que deban cumplirse.
