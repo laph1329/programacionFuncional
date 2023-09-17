@@ -709,22 +709,278 @@ En este ejemplo simplificado, la fase de Map filtra los números pares y asigna 
 
 
 **5.2. Manejo de excepciones en programación funcional**
-**5.2.1. Manejo de excepciones con try-catch**
-**5.2.2. Either y manejo de errores**
+
+En Java, el manejo de excepciones se puede abordar de manera funcional utilizando clases como Optional o Either de bibliotecas externas. Aunque Java no proporciona una estructura de datos Either de forma nativa, puedes implementar un enfoque similar utilizando Optional y manejar errores mediante valores Optional.empty().
+
+Aquí tienes un ejemplo de cómo manejar excepciones de manera funcional en Java utilizando Optional:
+
+      import java.util.Optional;
+
+      public class ManejoDeExcepcionesFuncional {
+      public static void main(String[] args) {
+      Optional<Integer> resultado = dividir(10, 2);
+
+        resultado.ifPresent(valor -> {
+            System.out.println("Resultado: " + valor);
+        });
+
+        Optional<Integer> error = dividir(10, 0);
+        
+        error.ifPresentOrElse(
+            valor -> {
+                System.out.println("Resultado: " + valor);
+            },
+            () -> {
+                System.out.println("Error: División por cero");
+            }
+        );
+    }
+
+    public static Optional<Integer> dividir(int a, int b) {
+        try {
+            int resultado = a / b;
+            return Optional.of(resultado);
+        } catch (ArithmeticException ex) {
+            return Optional.empty();
+        }
+    }
+      }
+
+En este ejemplo, la función dividir utiliza un bloque try-catch para manejar una posible excepción de división por cero. Si no se produce una excepción, devuelve un Optional con el resultado, de lo contrario, devuelve un Optional.empty() para indicar un error.
+
+Luego, en el main, utilizamos métodos de Optional como ifPresent y ifPresentOrElse para manejar el resultado o el error de manera funcional.
+
+Si deseas un enfoque más completo con manejo de errores a través de una estructura de datos Either, deberás utilizar bibliotecas externas como Vavr o JavaSlang, que proporcionan implementaciones de Either y otras estructuras de datos funcionales en Java. Estas bibliotecas permiten un manejo de errores más expresivo y funcional.
+
 
 ## Módulo 6: Biblioteca de Streams Avanzada
 **6.1. Streams paralelos**
+
+En Java, los streams paralelos son una característica que te permite aprovechar el poder del procesamiento en paralelo para realizar operaciones en colecciones de manera más eficiente cuando tienes múltiples núcleos de CPU disponibles. Esto es especialmente útil para procesar grandes conjuntos de datos donde se pueden realizar operaciones en paralelo en múltiples elementos al mismo tiempo.
+
 **6.1.1. Paralelismo en streams**
 **6.1.2. Uso de parallelStream()**
 
+Los streams paralelos en Java 8 y posteriores permiten realizar operaciones en paralelo de manera sencilla. Para convertir un stream en un stream paralelo, simplemente puedes llamar al método parallel() en el stream. A continuación, se muestra un ejemplo:
+
+      List<Integer> numeros = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+      // Convertir el stream en un stream paralelo
+      Stream<Integer> streamParalelo = numeros.parallelStream();
+      
+      // Realizar una operación en paralelo, por ejemplo, multiplicar cada número por 2
+      List<Integer> resultado = streamParalelo.map(numero -> numero * 2)
+      .collect(Collectors.toList());
+
+En este ejemplo, numeros.parallelStream() crea un stream paralelo a partir de una lista de números. Luego, la operación map se ejecuta en paralelo en los elementos del stream, multiplicando cada número por 2. Finalmente, los resultados se recopilan en una lista.
+
+Es importante tener en cuenta que no todas las operaciones son apropiadas para streams paralelos, ya que no todos los algoritmos se benefician del paralelismo. Debes ser consciente de la concurrencia y la posible necesidad de sincronización cuando trabajas con streams paralelos.
+
+Algunos puntos clave sobre los streams paralelos:
+
+El paralelismo solo es efectivo cuando se trabaja con conjuntos de datos lo suficientemente grandes o cuando las operaciones son lo suficientemente costosas en términos de tiempo de CPU.
+
+Los streams paralelos se pueden usar para acelerar operaciones como filtrado, mapeo y reducción en colecciones grandes.
+
+Debes tener en cuenta la posible necesidad de sincronización al trabajar con datos compartidos en operaciones paralelas.
+
+Java ofrece una serie de operaciones de terminal que son seguras para su uso en streams paralelos, como forEachOrdered, collect, reduce, min, max, entre otros.
+
+En resumen, los streams paralelos en Java son una característica poderosa para el procesamiento eficiente de grandes conjuntos de datos mediante la explotación del paralelismo de hardware. Sin embargo, debes usarlos con precaución y asegurarte de que son apropiados para tu caso de uso particular.
+
 **6.2. Collectors personalizados**
+
+En Java, los collectores son una parte importante de la API Stream y se utilizan para acumular los elementos de un stream en una colección o un valor. Aunque Java proporciona muchos collectors predefinidos, a veces es necesario crear collectors personalizados para satisfacer necesidades específicas de procesamiento y agregación de datos.
+
 **6.2.1. Creación de collectors personalizados**
+
+Puedes crear tus propios collectors personalizados en Java extendiendo la clase java.util.stream.Collector y proporcionando implementaciones personalizadas para los cinco métodos abstractos que se deben implementar:
+
+Supplier<R> supplier(): Este método debe devolver una función que inicializa y proporciona un contenedor mutable para recopilar los elementos del stream.
+
+BiConsumer<R, T> accumulator(): Esta función toma un acumulador (R) y un elemento del stream (T) y actualiza el acumulador con el elemento. Debe realizar la lógica de acumulación personalizada.
+
+BinaryOperator<R> combiner(): Si deseas realizar operaciones de combinación en paralelo, este método debe proporcionar una función que combine dos acumuladores parciales en uno. Es importante tener en cuenta que esta función debe ser segura para la concurrencia.
+
+Function<R, R> finisher(): Esta función toma un acumulador (R) y devuelve el resultado final del proceso de recolección.
+
+Set<Characteristics> characteristics(): Devuelve un conjunto de características que describe el collector, como si es CONCURRENT, UNORDERED, IDENTITY_FINISH, etc.
+
+Aquí tienes un ejemplo simplificado de cómo crear un collector personalizado que acumula elementos en una lista y realiza una operación personalizada en el acumulador:
+
+      import java.util.*;
+      import java.util.stream.Collector;
+      import java.util.stream.Collectors;
+      
+      public class MiCollector<T> implements Collector<T, List<T>, List<T>> {
+
+          @Override
+          public Supplier<List<T>> supplier() {
+              return ArrayList::new; // Inicializa una lista vacía
+          }
+      
+          @Override
+          public BiConsumer<List<T>, T> accumulator() {
+              return (lista, elemento) -> {
+                  // Realiza una operación personalizada en el acumulador
+                  if (elemento != null) {
+                      lista.add(elemento);
+                  }
+              };
+          }
+      
+          @Override
+          public BinaryOperator<List<T>> combiner() {
+              return (lista1, lista2) -> {
+                  lista1.addAll(lista2); // Combina dos acumuladores parciales
+                  return lista1;
+              };
+          }
+      
+          @Override
+          public Function<List<T>, List<T>> finisher() {
+              return Function.identity(); // Devuelve el acumulador tal como está
+          }
+      
+          @Override
+          public Set<Characteristics> characteristics() {
+              return Collections.emptySet(); // No se aplican características especiales
+          }
+      
+          public static void main(String[] args) {
+              List<String> palabras = Arrays.asList("Hola", "mundo", "este", "es", "un", "collector", "personalizado");
+      
+              List<String> resultado = palabras.stream()
+                      .collect(new MiCollector<>()); // Usar el collector personalizado
+      
+              System.out.println(resultado);
+          }
+      }
+
+En este ejemplo, el collector personalizado MiCollector acumula elementos en una lista y realiza una operación personalizada que excluye elementos nulos. Ten en cuenta que este es un ejemplo simplificado; los collectors personalizados pueden ser mucho más complejos según tus necesidades específicas.
+
 **6.2.2. toMap, toSet, y otros collectors predefinidos**
+
+En Java, la API Stream proporciona varios collectors predefinidos que facilitan la acumulación de elementos en diferentes tipos de colecciones, como mapas (toMap), conjuntos (toSet), listas (toList), y otros tipos de contenedores. Estos collectors son útiles en situaciones comunes de procesamiento de datos. A continuación, se presentan algunos de los collectors predefinidos más utilizados:
+
+1. toMap
+
+El collector toMap se utiliza para acumular elementos en un mapa. Puedes especificar cómo se mapean las claves y los valores en función de los elementos del stream. Aquí tienes un ejemplo:
+
+      import java.util.*;
+      import java.util.stream.Collectors;
+      
+      public class EjemploToMap {
+      public static void main(String[] args) {
+            List<String> nombres = Arrays.asList("Juan", "María", "Carlos", "Ana");
+      
+              Map<String, Integer> longitudNombres = nombres.stream()
+                      .collect(Collectors.toMap(
+                              nombre -> nombre,         // Función de clave (nombre)
+                              nombre -> nombre.length() // Función de valor (longitud del nombre)
+                      ));
+      
+              System.out.println(longitudNombres);
+           }
+      }
+
+En este ejemplo, los nombres se acumulan en un mapa donde las claves son los nombres y los valores son las longitudes de los nombres.
+
+2. toSet
+
+El collector toSet se utiliza para acumular elementos en un conjunto (Set). Esto garantiza que los elementos en la colección resultante sean únicos. Aquí tienes un ejemplo:
+
+      import java.util.*;
+      import java.util.stream.Collectors;
+      
+      public class EjemploToSet {
+      public static void main(String[] args) {
+      List<Integer> numeros = Arrays.asList(1, 2, 2, 3, 4, 4, 5);
+      
+              Set<Integer> conjuntoNumeros = numeros.stream()
+                      .collect(Collectors.toSet());
+      
+              System.out.println(conjuntoNumeros);
+          }
+      }
+
+En este ejemplo, los números se acumulan en un conjunto, lo que elimina los duplicados y produce un conjunto de números únicos.
+
+3. toList
+
+El collector toList se utiliza para acumular elementos en una lista. Esto es útil cuando deseas mantener el orden original de los elementos. Aquí tienes un ejemplo:
+
+      import java.util.*;
+      import java.util.stream.Collectors;
+      
+      public class EjemploToList {
+      public static void main(String[] args) {
+      Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5);
+      
+              List<Integer> listaNumeros = stream.collect(Collectors.toList());
+      
+              System.out.println(listaNumeros);
+          }
+      }
+
+En este ejemplo, los números se acumulan en una lista en el mismo orden en el que aparecen en el stream.
+
+Estos son solo algunos ejemplos de los collectors predefinidos disponibles en Java para acumular elementos en diferentes tipos de colecciones. La API Stream proporciona una variedad de collectors útiles que puedes utilizar según tus necesidades específicas de procesamiento de datos.
+
 
 ## Módulo 7: Diseño Funcional y Pruebas Unitarias
 **7.1. Diseño de software funcional**
+
+El diseño de software funcional es un enfoque de diseño de software que se basa en los principios de la programación funcional. En lugar de centrarse en los estados mutables y los efectos secundarios, el diseño funcional se centra en la inmutabilidad, la pureza de las funciones y la composición de funciones para construir sistemas robustos y fáciles de mantener.
+
 **7.1.1. Principios SOLID en programación funcional**
+
+Los principios SOLID son un conjunto de cinco principios de diseño de software que se utilizan en la programación orientada a objetos para crear código más mantenible y extensible. Si bien estos principios se originaron en el contexto de la programación orientada a objetos, algunos de ellos todavía pueden aplicarse en la programación funcional. A continuación, se describen brevemente los principios SOLID y cómo pueden relacionarse con la programación funcional:
+
+Principio de Responsabilidad Única (Single Responsibility Principle - SRP): Este principio establece que una clase debe tener una única razón para cambiar. En la programación funcional, la aplicación de este principio significa que una función o módulo debe hacer una sola cosa y hacerla bien. Las funciones puras y la composición de funciones en la programación funcional pueden ayudar a mantener la responsabilidad única.
+
+Principio de Abierto/Cerrado (Open/Closed Principle - OCP): Este principio sugiere que las entidades de software (como clases o módulos) deben estar abiertas para extensión pero cerradas para modificación. En la programación funcional, esto puede lograrse mediante la creación de funciones y módulos que sean fáciles de extender mediante la composición en lugar de la modificación directa.
+
+Principio de Sustitución de Liskov (Liskov Substitution Principle - LSP): Este principio se refiere a la capacidad de sustituir una clase derivada por su clase base sin afectar la corrección del programa. En la programación funcional, se enfatiza la inmutabilidad y la consistencia de tipos, lo que puede contribuir a la aplicación de este principio.
+
+Principio de Segregación de Interfaces (Interface Segregation Principle - ISP): Este principio sugiere que las interfaces no deben imponer a las clases que las implementan a que proporcionen métodos que no utilizan. En la programación funcional, la interfaz de una función o módulo debería ser simple y proporcionar solo lo que es necesario, lo que puede relacionarse con este principio.
+
+Principio de Inversión de Dependencia (Dependency Inversion Principle - DIP): Este principio establece que los módulos de alto nivel no deben depender de los módulos de bajo nivel, sino de abstracciones. En la programación funcional, la dependencia en abstracciones (por ejemplo, funciones de orden superior) en lugar de implementaciones concretas puede promover una inversión de dependencia adecuada.
+
+Si bien los principios SOLID están estrechamente relacionados con la programación orientada a objetos, algunos de ellos siguen siendo relevantes en la programación funcional debido a su enfoque en la modularidad, la inmutabilidad y la responsabilidad única. Sin embargo, la programación funcional también introduce sus propios principios y enfoques de diseño, como la inmutabilidad y la pureza de las funciones, que complementan estos principios. La aplicación de estos principios depende en gran medida del lenguaje y del paradigma de programación que estés utilizando.
+
 **7.1.2. Inyección de dependencias**
+
+La inyección de dependencias es un patrón de diseño que se utiliza para administrar las dependencias y las relaciones entre componentes en una aplicación de software. Aunque es más comúnmente asociado con la programación orientada a objetos y los contenedores de inversión de control (IoC), el concepto de inyección de dependencias también es aplicable en el contexto de la programación funcional.
+
+En el contexto de la programación funcional, la inyección de dependencias se refiere a la práctica de proporcionar las dependencias necesarias (como funciones u objetos inmutables) a una función o módulo en lugar de que estos componentes los creen o los obtengan internamente. Esto promueve un diseño más modular, desacoplado y testeable en el código funcional.
+
+Aquí hay algunas formas en que se puede aplicar la inyección de dependencias en programación funcional:
+
+Pasando funciones como argumentos: En la programación funcional, puedes pasar funciones como argumentos a otras funciones. Esto permite que una función dependa de otras funciones para realizar operaciones específicas. Es una forma de inyección de dependencias funcional. Por ejemplo:
+
+      // Función de orden superior que toma una función como argumento
+      public static int aplicarOperacion(int numero, Function<Integer, Integer> operacion) {
+      return operacion.apply(numero);
+      }
+      
+      // Uso de la función de orden superior con una operación específica
+      int resultado = aplicarOperacion(5, x -> x * 2); // Inyección de dependencia de la función de multiplicación
+
+Usando contenedores de dependencias funcionales: Algunos lenguajes funcionales y bibliotecas proporcionan contenedores de dependencias funcionales que permiten definir y gestionar las dependencias de las funciones de manera declarativa. Estos contenedores pueden facilitar la configuración y la resolución de dependencias en aplicaciones funcionales.
+
+Inmutabilidad de datos: En la programación funcional, los datos son inmutables, lo que significa que no pueden cambiar después de su creación. Esto promueve la creación de objetos de datos inmutables que pueden pasarse de manera segura como dependencias a las funciones sin preocuparse por efectos secundarios no deseados.
+
+La inyección de dependencias en programación funcional es beneficiosa porque:
+
+Facilita la prueba unitaria: Al proporcionar dependencias como argumentos, es más fácil crear pruebas unitarias y probar el comportamiento de las funciones de manera aislada.
+
+Promueve la modularidad: Las funciones pueden ser independientes y reutilizables, lo que facilita su composición en sistemas más grandes.
+
+Facilita el intercambio de implementaciones: Puedes cambiar las implementaciones de las dependencias sin cambiar el código que las utiliza, lo que hace que el código sea más flexible y mantenible.
+
+En resumen, la inyección de dependencias es una práctica relevante en la programación funcional que implica proporcionar dependencias externas a las funciones o módulos en lugar de crearlas internamente. Esto fomenta un diseño más modular y desacoplado, lo que facilita las pruebas y la mantenibilidad del código funcional.
+
 
 **7.2. Pruebas unitarias en programación funcional**
 **7.2.1. JUnit y pruebas unitarias**
