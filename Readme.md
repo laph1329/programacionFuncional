@@ -71,22 +71,22 @@ Las expresiones lambda son una característica clave introducida en Java 8 que p
 
       La sintaxis básica de una expresión lambda en Java 8 se asemeja a una función anónima o un bloque de código que se puede pasar como argumento a otro método. La estructura general de una expresión lambda es la siguiente:
             
-    java (parameter1, parameter2, ...) -> { cuerpo de la lambda }
+    (parameter1, parameter2, ...) -> { cuerpo de la lambda }
 
 parameter1, parameter2, etc., representan los parámetros de entrada de la lambda. Puedes tener cero o más parámetros. -> es el operador lambda que separa la lista de parámetros del cuerpo de la lambda. { cuerpo de la lambda } es el bloque de código que define el comportamiento de la lambda. Este bloque puede contener una o varias declaraciones y expresiones. Ejemplo de una expresión lambda que suma dos números:
 
-    java (int x, int y) -> { return x + y; }
+    (int x, int y) -> { return x + y; }
 Es importante destacar que, en muchos casos, puedes simplificar aún más una expresión lambda cuando el cuerpo contiene una sola expresión. En este caso, puedes omitir las llaves {} y la instrucción return. La expresión lambda anterior se puede simplificar de la siguiente manera:
 
-    java (int x, int y) -> x + y
+    (int x, int y) -> x + y
 En este caso, la expresión lambda toma dos enteros como parámetros y devuelve su suma.
 
 Las expresiones lambda son especialmente útiles cuando trabajas con colecciones de datos o interfaces funcionales, como java.util.function.Predicate, java.util.function.Consumer, java.util.function.Function, etc., que se utilizan comúnmente en operaciones como filter, map, forEach, entre otras, en colecciones de Java. Las expresiones lambda permiten escribir estos fragmentos de código de manera concisa y legible.
 
 Por ejemplo, para filtrar una lista de números para obtener solo los pares en Java 8 utilizando una expresión lambda:
 
-        java List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-        java List<Integer> evenNumbers = numbers.stream()
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        List<Integer> evenNumbers = numbers.stream()
         .filter(x -> x % 2 == 0)
         .collect(Collectors.toList());
         System.out.println(evenNumbers); // [2, 4, 6, 8, 10]
@@ -99,39 +99,117 @@ Aquí te presento algunos de los tipos de expresiones lambda más comunes en Jav
 
 **- Expresiones lambda sin parámetros:** Cuando una interfaz funcional no tiene ningún parámetro en su único método abstracto, puedes utilizar una expresión lambda sin parámetros. Por ejemplo
     
-            java () -> System.out.println("Hello World");
+            () -> System.out.println("Hello World");
 **- Expresiones lambda con un parámetro:** Si la interfaz funcional tiene un solo parámetro en su único método abstracto, puedes utilizar una expresión lambda con un parámetro. Por ejemplo:
         
-                java (int x) -> System.out.println(x);
+                (int x) -> System.out.println(x);
 **- Expresiones lambda con múltiples parámetros:** Si la interfaz funcional tiene múltiples parámetros en su único método abstracto, puedes utilizar una expresión lambda con múltiples parámetros. Por ejemplo:
             
-                    java (int x, int y) -> System.out.println(x + y);
+                    (int x, int y) -> System.out.println(x + y);
 **- Expresiones lambda con cuerpo de una sola línea:** Cuando el cuerpo de la expresión lambda contiene una sola expresión, puedes omitir las llaves {} y la instrucción return. Por ejemplo:
                 
-                        java (int x, int y) -> x + y
+                        (int x, int y) -> x + y
 **- Expresiones lambda con múltiples líneas:** Si el cuerpo de la expresión lambda contiene más de una línea de código, debes utilizar llaves {} para definir el cuerpo de la expresión lambda. Por ejemplo:
                 
-                        java (int x, int y) -> {
+                        (int x, int y) -> {
                         System.out.println("Hello");
                         System.out.println("World");
                         System.out.println(x + y);
                         }
 **- Expresiones lambda con tipos de parámetros inferidos:** En algunos casos, puedes omitir el tipo de parámetro en una expresión lambda, ya que el compilador puede inferir el tipo de parámetro en función del contexto. Sin embargo, en algunos casos, es posible que tengas que especificar el tipo de parámetro en la expresión lambda. Por ejemplo:
                     
-    java ( x,  y) -> System.out.println(x + y);
+    ( x,  y) -> System.out.println(x + y);
 **- Expresiones lambda con tipos de parámetros explícitos:** En algunos casos, puedes especificar explícitamente el tipo de parámetro en una expresión lambda. Por ejemplo:
                         
-    java (int x, int y) -> System.out.println(x + y);
+    (int x, int y) -> System.out.println(x + y);
 **- Expresiones lambda como referencias a métodos:** En lugar de proporcionar una expresión lambda con el cuerpo de una función, puedes utilizar una referencia a un método existente si el método tiene una firma compatible. Por ejemplo:
                             
     // Usando una referencia a método para el método "length" de una cadena    
     (String s) -> s.length()
 ### 2.2. Interfaces funcionales
-   1. Interfaz Function
-   2. Interfaz Predicate
-   3. Interfaz Consumer
+   1. **Interfaz Function**
 
-3. Ejemplos de uso de expresiones lambda
+      La interfaz funcional Function es una de las interfaces más utilizadas en Java 8 y representa una función que toma un argumento de un tipo dado y produce un resultado de otro tipo. En otras palabras, Function representa una función que toma un valor de entrada y devuelve un valor de salida. Esta interfaz es parte del paquete java.util.function.
+
+      La interfaz Function tiene un método abstracto llamado **"apply"**, que toma un argumento del tipo especificado y devuelve un resultado del tipo especificado. Su firma se ve así:
+                
+            R apply(T t);
+      T es el tipo del argumento de entrada.
+      R es el tipo del resultado.
+      La interfaz Function es parametrizada por dos tipos: T y R. Aquí tienes un ejemplo de cómo usar la interfaz Function:
+                
+            import java.util.function.Function;
+
+            public class EjemploFunction {
+            public static void main(String[] args) {
+            // Definimos una función que convierte una cadena en un entero
+            Function<String, Integer> funcionConversion = s -> Integer.parseInt(s);
+    
+            // Usamos la función para convertir una cadena en un entero
+            String numeroComoCadena = "123";
+            Integer numero = funcionConversion.apply(numeroComoCadena);
+    
+            System.out.println("Número como cadena: " + numeroComoCadena);
+            System.out.println("Número como entero: " + numero);
+            }
+            }
+      La interfaz Function es especialmente útil cuando necesitas transformar datos de un tipo a otro, como convertir un tipo de dato a otro, aplicar una operación matemática a un valor, o cualquier otra transformación de datos que requiera un valor de entrada y produzca un valor de salida. Esta interfaz es ampliamente utilizada en operaciones de mapeo (map) en flujos (Stream) de Java, entre otros casos.
+
+   2. **Interfaz Predicate**
+
+      La interfaz funcional Predicate es otra de las interfaces funcionales proporcionadas por Java 8 y se encuentra en el paquete java.util.function. Esta interfaz se utiliza para representar una función que toma un argumento de un tipo dado y devuelve un valor booleano (true o false). En otras palabras, un Predicate representa una condición o una prueba que se realiza en un objeto de un tipo especificado para determinar si cumple con ciertas condiciones.
+
+      La interfaz Predicate tiene un método abstracto llamado **"test"**, que toma un argumento del tipo especificado y devuelve un valor booleano (true si la condición se cumple y false si no). Su firma se ve así:
+                    
+                boolean test(T t);
+      T es el tipo del argumento que se va a evaluar.
+      Aquí tienes un ejemplo de cómo usar la interfaz Predicate:      
+      
+               import java.util.function.Predicate;
+
+               public class EjemploPredicate {
+               public static void main(String[] args) {
+               // Definimos un Predicate para verificar si un número es par
+               Predicate<Integer> esPar = numero -> numero % 2 == 0;
+
+               // Probamos el Predicate con varios números
+               System.out.println("¿Es 4 par? " + esPar.test(4)); // true
+               System.out.println("¿Es 7 par? " + esPar.test(7)); // false
+               }
+               }
+      La interfaz Predicate es útil en situaciones donde necesitas evaluar una condición sobre un valor, como filtrar elementos de una lista que cumplan con cierta condición o validar datos de entrada en un programa.
+
+      En resumen, Predicate es una interfaz funcional que representa una condición o una prueba booleana sobre un valor de entrada, y se utiliza comúnmente en situaciones en las que se necesita evaluar o filtrar datos basados en una condición.
+
+   3. **Interfaz Consumer**
+      
+      La interfaz funcional Consumer es otra de las interfaces proporcionadas por Java 8 y se encuentra en el paquete java.util.function. Esta interfaz se utiliza para representar una función que toma un argumento de un tipo especificado y no devuelve ningún resultado explícito. En otras palabras, un Consumer representa una operación o acción que se realiza en un objeto de un tipo especificado, pero no produce un valor de salida.
+
+      La interfaz Consumer tiene un método abstracto llamado **"accept"**, que toma un argumento del tipo especificado y realiza una operación sobre él sin devolver ningún valor. Su firma se ve así:
+       
+             void accept(T t);
+      T es el tipo del argumento que se va a consumir.
+      Aquí tienes un ejemplo de cómo usar la interfaz Consumer:
+      
+
+        import java.util.function.Consumer;
+        
+        public class EjemploConsumer {
+        public static void main(String[] args) {
+        // Definimos un Consumer que imprime el valor recibido
+        Consumer<String> imprimirTexto = texto -> System.out.println(texto);
+        
+        // Usamos el Consumer para imprimir texto
+        imprimirTexto.accept("Hola, mundo!");
+        imprimirTexto.accept("Java 8 es genial");
+        }
+        }
+
+La interfaz Consumer es útil en situaciones donde necesitas realizar una acción o una operación en un objeto, pero no necesitas devolver ningún valor. Puede ser utilizado en operaciones como forEach en colecciones, donde se desea aplicar una acción a cada elemento de la colección.
+
+En resumen, Consumer es una interfaz funcional que representa una operación que toma un argumento y no devuelve ningún valor explícito, y se utiliza comúnmente para realizar acciones en objetos en lugar de producir resultados.  
+   
+   4. **Ejemplos de uso de expresiones lambda**
 
 ## Módulo 3: Streams en Java 8
 ### 3.1. Introducción a los streams
